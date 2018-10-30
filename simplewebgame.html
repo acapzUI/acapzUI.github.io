@@ -36,13 +36,29 @@
 	var ctx = canvas.getContext("2d");
 
 
-
-	ctx.beginPath();
-	ctx.rect(20, 40, 50, 50);
-	ctx.fillStyle="#FF0000";
-	ctx.fill();
-	ctx.closePath();
+	var i = 0;
 	
+ 
+
+	function draw() { // draw phase
+
+		if (i>10) {
+			j=-1;
+		} else if (i<0) {
+			j=1;
+		}
+
+		i+=j;
+
+		ctx.beginPath();
+		ctx.rect(20, 40, 50, 50);
+		ctx.fillStyle="#FF0000";
+		ctx.fill();
+		ctx.closePath();
+	}
+	setInterval(draw,10);
+
+
 </script>
 
 </body>
