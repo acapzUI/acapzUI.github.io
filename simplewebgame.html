@@ -3,11 +3,10 @@
 	Date : 18.10.29
 	Author : devpz
 
-	Purpose 
+	Purpose : Really Simpe Web Game Dev! :)
 
 
 -->
-
 
 <!DOCTYPE html>
 <html>
@@ -36,30 +35,97 @@
 	var ctx = canvas.getContext("2d");
 
 
-	var x = canvas.width/2;
-	var y = canvas.height-30;
+	var x = 20;
+	var y = 20;
 
-	var i = 0;
-	var j = 1;
-	
- 
+	var rightPressed = false;
+	var leftPressed = false;
+	var upPressed = false;
+	var downPressed = false;
+	var spacePressed = false;
 
-	function draw() { // draw phase
+	var gravity = 0.4;
+	var currentSpeed = 0;
 
-		if (i>300) {
-			j=-1;
-		} else if (i<1) {
-			j=1;
+	document.addEventListener("keydown", keyDownHandler, false);
+	document.addEventListener("keyup", keyUpHandler, false);
+
+
+	// 눌렀을때
+	function keyDownHandler(e) {
+		if (e.keyCode == 39) {
+			rightPressed = true;
+		} else if (e.keyCode == 37 ) {
+			leftPressed = true;
+		} else if (e.keyCode == 38) {
+			upPressed = true;
+		} else if (e.keyCode == 40) {
+			downPressed = true;
+		} else if (e.keyCode == 32) {
+			spacePressed = true;
+		}
+	}
+	// 뗐을때
+	function keyUpHandler(e) {
+		if (e.keyCode == 39) {
+			rightPressed = false;
+		} else if (e.keyCode == 37 ) {
+			leftPressed = false;
+		} else if (e.keyCode == 38) {
+			upPressed = false;
+		} else if (e.keyCode == 40) {
+			downPressed = false;
+		} else if (e.keyCode == 32) {
+			spacePressed = false;
+		}
+ 	}
+
+	function draw() { // draw function
+
+		// canvas clear phase
+		ctx.clearRect(0,0, canvas.width, canvas.height);
+
+		// calc phase
+
+		/*
+		if (rightPressed && x < canvas.width-50) { 
+			x+=5;
+		}
+		if (leftPressed && x > 0) { 
+			x-=5;
+		}
+		if (upPressed && y > 0) {
+			y-=5;
+		}
+		if (downPressed && y < canvas.height-50) {
+			y+=5;
+		}
+		*/ 
+
+
+		if (y > canvas.height-50) {
+			currentSpeed = 0;
+		} else {
+			currentSpeed -= gravity;
+			if (y - currentSpeed > canvas.height-50) {
+				y = canvas.height-50;
+			} else {
+				y -= currentSpeed;
+			}
 		}
 
-		i+=j;
+		if (spacePressed) {
+			currentSpeed=9;
+			spacePressed = false;
+		}
 
-		ctx.clearRect(0,0, canvas.width, canvas.height)
+		// canvas draw phase
 		ctx.beginPath();
-		ctx.rect(20+i, 40, 50, 50);
+		ctx.rect(x, y, 50, 50);
 		ctx.fillStyle="#FF0000";
 		ctx.fill();
 		ctx.closePath();
+
 	}
 	setInterval(draw,10);
 

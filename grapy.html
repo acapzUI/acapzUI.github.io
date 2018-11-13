@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<meta charset="utf-8"/>
+
+<!-- 
+	project : grapy
+	author : devpz
+	link : https://github.com/devpz
+-->
+
+<html>
+<head>
+	<title>Grapy Project</title>
+</head>
+<style>
+	.node {
+		fill : #ccc;
+		stroke: #fff;
+		stroke-width : 2px;
+	}
+	.link {
+		stroke: #777;
+		stroke-width: 2px;
+	}
+</style>
+<body>
+
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+	<script type="text/javascript">
+
+		var width = 600,
+			height = 480;
+
+		/*var links = [
+			{ source:'Naver', target:'Google' },
+			{ source:'Naver', target:'Inven' },
+			{ source:'Twitch', target: 'Inven' },
+			{ source:'Fucking', target: 'Twitch' },
+			{ source:'Naver', target:'Twitch' },
+		];
+		var nodes = {}; */
+
+		//parse links to nodes
+		/*links.forEach(function(link){
+			link.source = nodes[link.source] ||
+				(nodes[link.source] = {name: link.source});
+			link.target = nodes[link.target] ||
+				(nodes[link.target] = {name: link.target});
+		});*/
+
+		var svg = d3.select('body').append('svg')
+			.attr('width', width)
+			.attr('height', height);
+
+		var force = d3.layout.force()
+			.size([width, height])
+			.linkDistance(300);
+
+		var color = function (group) { 
+            if (group == 1) {
+                return "#aaa";
+            } else if (group == 2) {
+                return "#fbc280";
+            } else if (group == 3) {
+                return "#405275";
+            } else {
+            	return "#123456";
+            }
+        }
+
+		d3.json("data.json", function(json) {
+			//if (error) throw error;
+
+			force
+				.nodes(json.nodes)
+				.links(json.links)
+				.start();
+
+			var link = svg.selectAll('.link')
+				.data(json.links)
+				.enter().append('line')
+				.attr('class', 'link');
+
+			var node = svg.selectAll('.node')
+				.data(json.nodes)
+				.enter().append('circle')
+				.attr('class', 'node')
+				.attr('r', width*0.03)
+				.attr('fill', function(d) {
+					return color(d.group);
+				});
+
+			node.append('text')
+	            .attr('dx', -18)
+	            .attr('dy', 8)
+	            .style('font-size', '18px') 
+	            .text(function (d) {
+	                return d.name;
+	            });
+
+			force.on("tick", tick);
+
+		});
+
+		function tick(e) {
+			node.attr('cx', function(d) { return d.x; })
+				.attr('cy', function(d) { return d.y; })
+				.call(force.drag);
+
+			link.attr('x1', function(d) { return d.source.x; })
+				.attr('y1', function(d) { return d.source.y; })
+				.attr('x2', function(d) { return d.target.x; })
+				.attr('y2', function(d) { return d.target.y; })
+		}
+
+
+	</script>
+
+</body>
+</html>
