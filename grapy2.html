@@ -53,7 +53,7 @@
 					.attr("r", 5)
 					.attr("fill",function(d) { return color(d.group); })
 					.call(d3.drag() 
-						.on("start", dragStarted)
+						.on("start", dragstarted)
 						.on("drag", dragged)
 						.on("end", dragended));
 
