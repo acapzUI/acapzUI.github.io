@@ -121,10 +121,6 @@
 	    	"source": 12,
 	    	"target": 13,
         	"value": 1
-	    }, {
-	    	"source": 13,
-	    	"target": 14,
-        	"value": 1
 	    }
 	]
 }
