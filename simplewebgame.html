@@ -50,6 +50,19 @@
 	document.addEventListener("keydown", keyDownHandler, false);
 	document.addEventListener("keyup", keyUpHandler, false);
 
+	var enermy = [];
+
+	function enermyCreater() {
+		var rand = Math.random();
+		rand = Math.floor(rand* 320);
+		enermy.push([480, rand]);
+	}
+
+	function collision() {
+
+
+	}
+
 
 	// 눌렀을때
 	function keyDownHandler(e) {
@@ -126,7 +139,25 @@
 		ctx.fill();
 		ctx.closePath();
 
+		enermy.forEach(function(item, index, array) {
+			ctx.beginPath();
+			ctx.arc(item[0], item[1], 3, 0, 360, 0);
+			ctx.fill();
+			ctx.closePath();
+
+			item[0]-=1;
+
+			if(item[0]<0) {
+				delete enermy[index];
+			}
+		});
+			
 	}
+
+
+
+
+	setInterval(enermyCreater, 1000);
 	setInterval(draw,10);
 
 
