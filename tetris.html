@@ -1,0 +1,181 @@
+<!--
+
+	Date : 19.03.13
+	Author : devpz
+
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>Simple Tetris</title>
+	<style type="text/css">
+		* { 
+			padding: 0; 
+			margin: 0; 
+		}
+		canvas {
+			background: #eee;
+			display: block;
+			margin: 0 auto;
+		} 
+	</style>
+</head>
+<body>
+
+<canvas id="myCanvas" width="480" height="720">
+
+
+<script type="text/javascript">
+	var canvas = document.getElementById("myCanvas");
+	var ctx = canvas.getContext("2d");
+
+	document.addEventListener("keydown", keyDownHandler, false);
+	document.addEventListener("keyup", keyUpHandler, false);
+
+
+
+	//////////////////////////////// variables
+
+	var rightPressed = false;
+	var leftPressed = false;
+	var upPressed = false;
+	var downPressed = false;
+	var spacePressed = false;
+
+	var i, j;
+
+	// 	10 * 20 = 200
+	var map = [];
+	for(i=0;i<10;i++) {
+		for(j=0;j<20;j++) {
+			map[i+j*10]=0;
+		}
+	}
+	// 블록들 
+	var mono = [
+		[
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			1, 1, 1, 1
+		], [
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			1, 0, 0, 0,
+			1, 1, 1, 0
+		], [
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 1, 0,
+			1, 1, 1, 0
+		], [
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			1, 1, 0, 0,
+			1, 1, 0, 0
+		], [
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 1, 1, 0,
+			1, 1, 0, 0
+		], [
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 1, 0, 0,
+			1, 1, 1, 0
+		], [
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			1, 1, 0, 0,
+			0, 1, 1, 0
+		]
+	];
+	var monoColors = [ 
+		"#e74c3c", // red
+		"#e67e22", // orange
+		"#f1c40f", // yellow
+		"#2ecc71", // green
+		"#3498db", // blue
+		"#9b59b6", // purple
+		"#34495e" // deep blue
+	];
+
+
+	var blockImage = new Image();
+	blockImage.src = "./block2.png";
+
+	//////////////////////////////// functions 
+
+	// 눌렀을때
+	function keyDownHandler(e) {
+		if (e.keyCode == 39) {
+			rightPressed = true;
+		} else if (e.keyCode == 37 ) {
+			leftPressed = true;
+		} else if (e.keyCode == 38) {
+			upPressed = true;
+		} else if (e.keyCode == 40) {
+			downPressed = true;
+		} else if (e.keyCode == 32) {
+			spacePressed = true;
+		}
+	}
+	// 뗐을때
+	function keyUpHandler(e) {
+		if (e.keyCode == 39) {
+			rightPressed = false;
+		} else if (e.keyCode == 37 ) {
+			leftPressed = false;
+		} else if (e.keyCode == 38) {
+			upPressed = false;
+		} else if (e.keyCode == 40) {
+			downPressed = false;
+		} else if (e.keyCode == 32) {
+			spacePressed = false;
+		}
+ 	}
+
+
+
+	function draw() { // 드로우 페이즈 
+
+		ctx.fillStyle = "#000000";
+		ctx.fillRect(0, 0, 160, 320);
+
+		for(i=0;i<10;i++) {
+			for(j=0;j<20;j++) {
+				var temp = map[i+j*10];
+				if (temp) { 
+					ctx.globalAlpha = 1;
+					ctx.drawImage(blockImage,i*16,j*16);
+					ctx.globalAlpha = 0.5;
+					ctx.fillStyle = monoColors[temp-1];
+					ctx.fillRect(i*16,j*16,16,16);
+				}
+
+			}
+		}
+
+		
+	}
+	function calc() { // 연산 페이즈
+		
+	}
+	function step() { // 스텝 페이즈 
+		calc();
+		draw();
+	}
+
+
+	setInterval(step,10);
+
+
+
+
+</script>
+
+</body>
+</html>
