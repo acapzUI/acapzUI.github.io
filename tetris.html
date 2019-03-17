@@ -64,33 +64,33 @@
 		], [
 			0, 0, 0, 0,
 			0, 0, 0, 0,
-			1, 0, 0, 0,
-			1, 1, 1, 0
+			2, 0, 0, 0,
+			2, 2, 2, 0
 		], [
 			0, 0, 0, 0,
 			0, 0, 0, 0,
-			0, 0, 1, 0,
-			1, 1, 1, 0
+			0, 0, 3, 0,
+			3, 3, 3, 0
 		], [
 			0, 0, 0, 0,
 			0, 0, 0, 0,
-			1, 1, 0, 0,
-			1, 1, 0, 0
+			4, 4, 0, 0,
+			4, 4, 0, 0
 		], [
 			0, 0, 0, 0,
 			0, 0, 0, 0,
-			0, 1, 1, 0,
-			1, 1, 0, 0
+			0, 5, 5, 0,
+			5, 5, 0, 0
 		], [
 			0, 0, 0, 0,
 			0, 0, 0, 0,
-			0, 1, 0, 0,
-			1, 1, 1, 0
+			0, 6, 0, 0,
+			6, 6, 6, 0
 		], [
 			0, 0, 0, 0,
 			0, 0, 0, 0,
-			1, 1, 0, 0,
-			0, 1, 1, 0
+			7, 7, 0, 0,
+			0, 7, 7, 0
 		]
 	];
 	var monoColors = [ 
@@ -112,8 +112,8 @@
 	var blocks = [
 		1, 2, 3, 4, 5, 6, 7
 	];
-	var blocks_use1 = [];
-	var blocks_use2 = [];
+	var blocksStack = [];
+	var blocksDummy = [];
 	var hold = 0;
 
 	//////////////////////////////// functions 
@@ -164,6 +164,9 @@
 	}
 	function draw() { // 드로우 페이즈 
 
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+		ctx.globalAlpha = 1;
 		ctx.fillStyle = "#000000";
 		ctx.fillRect(0, 0, 160, 320);
 
@@ -180,30 +183,42 @@
 			}
 		}
 		var z;
+		var shift=100;
+		var xpos=32;
+		var ypos=352;
 		for(z=0;z<3;z++) {
-			ctx.globalAlpha = 1;
-			for(i=0;i<3;i++) {
-				for	
+			var temp = blocksStack[z]; 
+			for(i=0;i<4;i++) {
+				for(j=0;j<4;j++) {
+					var temp2 = mono[temp-1];
+					//alert(temp2)
+					var temp3 = temp2[i+j*4];
+					if (temp3) {
+						ctx.globalAlpha = 1;
+						ctx.drawImage(blockImage,xpos+shift*z+i*16,ypos+j*16);
+						ctx.globalAlpha = 0.5;
+						ctx.fillStyle = monoColors[temp3-1];
+						ctx.fillRect(xpos+shift*z+i*16,ypos+j*16,16,16);
+					}
+				}
 			}
 		}
 		
 	}
 	function init() { // 초기화 페이즈
-		//console.log(blocks_use1);
-		blocks_use1 = blocks.slice();
-		//console.log(blocks_use1);
+		//console.log(blocksStack);
+		blocksStack = blocks.slice();
+		//console.log(blocksStack);
 
-		blocks_use1 = shuffle(blocks_use1);
-		//console.log(blocks_use1);
+		blocksStack = shuffle(blocksStack);
+		//console.log(blocksStack);
 	}
 	function calc() { // 연산 페이즈
-
-
-
-		if (blocks_use1.length < 3) {
-			blocks_use2 = blocks.slice();	
-			blocks_use2 = shuffle(blocks_use2);
-			blocks_use1 = blocks_use1.concat(blocks_use2);
+		
+		if (blocksStack.length < 3) {
+			blocksDummy = blocks.slice();	
+			blocksDummy = shuffle(blocksDummy);
+			blocksStack = blocksStack.concat(blocksDummy);
 		}
 	}
 	function step() { // 스텝 페이즈 
