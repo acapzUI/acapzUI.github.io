@@ -107,6 +107,15 @@
 	var blockImage = new Image();
 	blockImage.src = "./block2.png";
 
+
+
+	var blocks = [
+		1, 2, 3, 4, 5, 6, 7
+	];
+	var blocks_use1 = [];
+	var blocks_use2 = [];
+	var hold = 0;
+
 	//////////////////////////////// functions 
 
 	// 눌렀을때
@@ -137,9 +146,22 @@
 			spacePressed = false;
 		}
  	}
+	function shuffle(array) {
+		var copy = [], n = array.length, i;
 
-
-
+		// While there remain elements to shuffle…
+		while (n) {
+			// Pick a remaining element…
+			i = Math.floor(Math.random() * array.length);
+			// If not already shuffled, move it to the new array.
+			if (i in array) {
+				copy.push(array[i]);
+				delete array[i];
+				n--;
+			}
+		}
+		return copy;
+	}
 	function draw() { // 드로우 페이즈 
 
 		ctx.fillStyle = "#000000";
@@ -155,21 +177,41 @@
 					ctx.fillStyle = monoColors[temp-1];
 					ctx.fillRect(i*16,j*16,16,16);
 				}
-
 			}
 		}
-
+		var z;
+		for(z=0;z<3;z++) {
+			ctx.globalAlpha = 1;
+			for(i=0;i<3;i++) {
+				for	
+			}
+		}
 		
 	}
+	function init() { // 초기화 페이즈
+		//console.log(blocks_use1);
+		blocks_use1 = blocks.slice();
+		//console.log(blocks_use1);
+
+		blocks_use1 = shuffle(blocks_use1);
+		//console.log(blocks_use1);
+	}
 	function calc() { // 연산 페이즈
-		
+
+
+
+		if (blocks_use1.length < 3) {
+			blocks_use2 = blocks.slice();	
+			blocks_use2 = shuffle(blocks_use2);
+			blocks_use1 = blocks_use1.concat(blocks_use2);
+		}
 	}
 	function step() { // 스텝 페이즈 
 		calc();
 		draw();
 	}
 
-
+	init(); 
 	setInterval(step,10);
 
 
