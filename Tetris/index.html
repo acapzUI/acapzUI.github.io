@@ -44,6 +44,12 @@
 	var downPressed = false;
 	var spacePressed = false;
 
+	var rightPassed = true;
+	var leftPassed = true;
+	var upPassed = true;
+	var downPassed = true;
+	var spacePassed = true;
+
 	var timerEnd = 50;
 	var timer = timerEnd;
 
@@ -124,15 +130,15 @@
 
 	// 눌렀을때
 	function keyDownHandler(e) {
-		if (e.keyCode == 39) {
+		if (e.keyCode == 39 && rightPassed) {
 			rightPressed = true;
-		} else if (e.keyCode == 37 ) {
+		} else if (e.keyCode == 37 && leftPassed) {
 			leftPressed = true;
-		} else if (e.keyCode == 38) {
+		} else if (e.keyCode == 38 && upPassed) {
 			upPressed = true;
-		} else if (e.keyCode == 40) {
+		} else if (e.keyCode == 40 && downPassed) {
 			downPressed = true;
-		} else if (e.keyCode == 32) {
+		} else if (e.keyCode == 32 && spacePassed) {
 			spacePressed = true;
 		}
 	}
@@ -140,10 +146,13 @@
 	function keyUpHandler(e) {
 		if (e.keyCode == 39) {
 			rightPressed = false;
+			rightPassed = true;
 		} else if (e.keyCode == 37 ) {
 			leftPressed = false;
+			leftPassed = true;
 		} else if (e.keyCode == 38) {
 			upPressed = false;
+			left
 		} else if (e.keyCode == 40) {
 			downPressed = false;
 		} else if (e.keyCode == 32) {
@@ -236,6 +245,7 @@
 
 	function collision() {
 		var i, j;
+		var ypos = -1;
 		for(i=0;i<4;i++) {
 			for(j=0;j<4;j++) {
 
@@ -280,6 +290,7 @@
 			}
 			timer = timerEnd;
 		}
+
 		
 		if (blocksStack.length < 3) {
 			blocksDummy = blocks.slice();	
