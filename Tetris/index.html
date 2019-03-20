@@ -27,7 +27,6 @@
 
 <canvas id="myCanvas" width="480" height="720">
 
-
 <script type="text/javascript">
 	var canvas = document.getElementById("myCanvas");
 	var ctx = canvas.getContext("2d");
@@ -45,7 +44,10 @@
 	var downPressed = false;
 	var spacePressed = false;
 
-	var i, j;
+	var timerEnd = 50;
+	var timer = timerEnd;
+
+	var currentBlock;
 
 	// 	10 * 20 = 200
 	var map = [];
@@ -107,14 +109,16 @@
 	var blockImage = new Image();
 	blockImage.src = "./block2.png";
 
-
-
 	var blocks = [
 		1, 2, 3, 4, 5, 6, 7
 	];
 	var blocksStack = [];
 	var blocksDummy = [];
 	var hold = 0;
+
+	var currentBlockX = 3;
+	var currentBlockY = -2;
+
 
 	//////////////////////////////// functions 
 
@@ -164,14 +168,18 @@
 	}
 	function draw() { // 드로우 페이즈 
 
+		// 캔버스 비우기
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+		// 테트리스 창
 		ctx.globalAlpha = 1;
 		ctx.fillStyle = "#000000";
 		ctx.fillRect(0, 0, 160, 320);
 
-		for(i=0;i<10;i++) {
-			for(j=0;j<20;j++) {
+		// 테트리스 맵 드로우
+		var i, j;
+		for (i=0;i<10;i++) {
+			for (j=0;j<20;j++) {
 				var temp = map[i+j*10];
 				if (temp) { 
 					ctx.globalAlpha = 1;
@@ -182,6 +190,26 @@
 				}
 			}
 		}
+
+		// 테트리스 움직이는 블럭 드로우 
+		var temp = mono[currentBlock-1];
+		for (i=0;i<4;i++) {
+			for (j=0;j<4;j++) {
+				var temp2 = temp[i+j*4];
+				if (temp2) {
+					ctx.globalAlpha = 1;
+					ctx.drawImage(blockImage,currentBlockX*16+i*16,currentBlockY*16+j*16);
+					ctx.globalAlpha = 0.5;
+					ctx.fillStyle = monoColors[temp2-1];
+					ctx.fillRect(currentBlockX*16+i*16,currentBlockY*16+j*16,16,16);
+
+				}
+				
+			}
+		}
+
+
+		// 다음 블럭들
 		var z;
 		var shift=100;
 		var xpos=32;
@@ -205,6 +233,17 @@
 		}
 		
 	}
+
+	function collision() {
+		var i, j;
+		for(i=0;i<4;i++) {
+			for(j=0;j<4;j++) {
+
+			}
+		}
+		return false;
+	}
+
 	function init() { // 초기화 페이즈
 		//console.log(blocksStack);
 		blocksStack = blocks.slice();
@@ -212,8 +251,35 @@
 
 		blocksStack = shuffle(blocksStack);
 		//console.log(blocksStack);
+
+		currentBlock = blocksStack[0];
+		blocksStack.shift();
 	}
 	function calc() { // 연산 페이즈
+
+		timer--;
+		// timer trigger
+		if (timer<0) {
+			var temp;
+
+			// test code
+			if (currentBlockY>16) {
+				temp = true;
+			} else {
+				temp = false;
+			}
+
+			//temp = collision();
+			if (!temp) {
+				currentBlockY++;
+			} else {
+				// 다음 블럭 나오는 action
+				currentBlockY = -2;
+				currentBlock = blocksStack[0];
+				blocksStack.shift();
+			}
+			timer = timerEnd;
+		}
 		
 		if (blocksStack.length < 3) {
 			blocksDummy = blocks.slice();	
