@@ -50,7 +50,7 @@
 	var downPassed = true;
 	var spacePassed = true;
 
-	var timerEnd = 50;
+	var timerEnd = 100;
 	var timer = timerEnd;
 
 	var currentBlock;
@@ -245,32 +245,38 @@
 
 	function collision(dir) {
 		var i, j;
-		if (dir="left") {
+		if (dir=="left") {
 			for(i=0;i<4;i++) {
 				for(j=0;j<4;j++) {
 					var temp = mono[currentBlock-1];
-					if(temp) {
-						if (!( map[(currentBlockX+i-1) + ((currentBlockY+j)*10)] )) {
+					if(temp[i+j*4]) {
+						if (currentBlockX==0) {
+							return true;
+						}
+						if (( map[(currentBlockX+i-1) + ((currentBlockY+j)*10)] )) {
 							return true;
 						}
 					}
 				}
 			}	
-		} else if (dir="right") {
+		} else if (dir=="right") {
 			for(i=0;i<4;i++) {
 				for(j=0;j<4;j++) {
 					var temp = mono[currentBlock-1];
-					if(temp) {
-						if (!( map[(currentBlockX+i+1) + ((currentBlockY+j)*10)] )) {
+					if(temp[i+j*4]) {
+						if (currentBlockX==(20-4)) {
+							return true;
+						}
+						if (( map[(currentBlockX+i+1) + ((currentBlockY+j)*10)] )) {
 							return true;
 						}
 					}
 				}
 			}
-		} else if (dir="down") {
+		} else if (dir=="down") {
 
 
-		} else if (dir="space") {
+		} else if (dir=="space") {
 
 		}
 		return false;
@@ -289,7 +295,7 @@
 
 
 		// test code 
-		map[20] = 4;
+		map[22] = 4;
 	}
 	function calc() { // 연산 페이즈
 
@@ -317,9 +323,15 @@
 			timer = timerEnd;
 		}
 
-		if (leftPassed && !collision("left")) {
+		if (leftPressed && leftPassed && !collision("left")) {
+			console.log("left move");
 			currentBlockX--;
 			leftPassed = false;
+		} 
+		if (rightPressed && rightPassed && !collision("right")) {
+			console.log("right move");
+			currentBlockX++;
+			rightPassed = false;
 		}
 
 		
