@@ -152,7 +152,7 @@
 			leftPassed = true;
 		} else if (e.keyCode == 38) {
 			upPressed = false;
-			left
+			upPassed = true;
 		} else if (e.keyCode == 40) {
 			downPressed = false;
 		} else if (e.keyCode == 32) {
@@ -243,13 +243,35 @@
 		
 	}
 
-	function collision() {
+	function collision(dir) {
 		var i, j;
-		var ypos = -1;
-		for(i=0;i<4;i++) {
-			for(j=0;j<4;j++) {
-
+		if (dir="left") {
+			for(i=0;i<4;i++) {
+				for(j=0;j<4;j++) {
+					var temp = mono[currentBlock-1];
+					if(temp) {
+						if (!( map[(currentBlockX+i-1) + ((currentBlockY+j)*10)] )) {
+							return true;
+						}
+					}
+				}
+			}	
+		} else if (dir="right") {
+			for(i=0;i<4;i++) {
+				for(j=0;j<4;j++) {
+					var temp = mono[currentBlock-1];
+					if(temp) {
+						if (!( map[(currentBlockX+i+1) + ((currentBlockY+j)*10)] )) {
+							return true;
+						}
+					}
+				}
 			}
+		} else if (dir="down") {
+
+
+		} else if (dir="space") {
+
 		}
 		return false;
 	}
@@ -264,6 +286,10 @@
 
 		currentBlock = blocksStack[0];
 		blocksStack.shift();
+
+
+		// test code 
+		map[20] = 4;
 	}
 	function calc() { // 연산 페이즈
 
@@ -289,6 +315,11 @@
 				blocksStack.shift();
 			}
 			timer = timerEnd;
+		}
+
+		if (leftPassed && !collision("left")) {
+			currentBlockX--;
+			leftPassed = false;
 		}
 
 		
