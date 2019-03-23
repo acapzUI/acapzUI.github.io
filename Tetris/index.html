@@ -50,7 +50,7 @@
 	var downPassed = true;
 	var spacePassed = true;
 
-	var timerEnd = 100;
+	var timerEnd = 70;
 	var timer = timerEnd;
 
 	var currentBlock;
@@ -155,8 +155,10 @@
 			upPassed = true;
 		} else if (e.keyCode == 40) {
 			downPressed = false;
+			downPassed = true;
 		} else if (e.keyCode == 32) {
 			spacePressed = false;
+			spacePassed = true;
 		}
  	}
 	function shuffle(array) {
@@ -175,7 +177,8 @@
 		}
 		return copy;
 	}
-	function draw() { // 드로우 페이즈 
+	// 드로우 페이즈
+	function draw() {  
 
 		// 캔버스 비우기
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -240,9 +243,8 @@
 				}
 			}
 		}
-		
 	}
-
+	// 충돌 처리
 	function collision(dir) {
 		var i, j;
 		if (dir=="left") {
@@ -274,13 +276,35 @@
 				}
 			}
 		} else if (dir=="down") {
-
-
-		} else if (dir=="space") {
-
+			for (i=0;i<4;i++) {
+				for (j=0;j<4;j++) {
+					var temp = mono[currentBlock-1];
+					if (temp[i+j*4]) {
+						if((currentBlockY+1)==18) {
+							return true;
+						}
+						if (( map[(currentBlockX+i) + ((currentBlockY+j+1)*10)] )) {
+							return true;
+						}
+					}
+				}
+			}
 		}
 		return false;
 	}
+	function mapInsert() {
+		var i, j;
+		var temp = mono[currentBlock-1];
+		for (i=0;i<4;i++) {
+			for(j=0;j<4;j++) {
+				var temp2 = temp[i+j*4];
+				if (temp2){
+					map[currentBlockX+i+(currentBlockY+j)*10] = currentBlock;
+				}
+			}
+		}
+	}
+
 
 	function init() { // 초기화 페이즈
 		//console.log(blocksStack);
@@ -292,11 +316,6 @@
 
 		currentBlock = blocksStack[0];
 		blocksStack.shift();
-
-
-		// test code 
-		map[22] = 4;
-		map[33] = 5;
 	}
 	function calc() { // 연산 페이즈
 
@@ -304,19 +323,16 @@
 		// timer trigger
 		if (timer<0) {
 			var temp;
+			temp = collision("down");
 
-			// test code
-			if (currentBlockY>16) {
-				temp = true;
-			} else {
-				temp = false;
-			}
-
-			//temp = collision();
 			if (!temp) {
 				currentBlockY++;
 			} else {
+
+				mapInsert();
+
 				// 다음 블럭 나오는 action
+				currentBlockX = 3;
 				currentBlockY = -2;
 				currentBlock = blocksStack[0];
 				blocksStack.shift();
@@ -333,6 +349,13 @@
 			console.log("right move");
 			currentBlockX++;
 			rightPassed = false;
+		}
+		if (spacePressed && spacePassed) {
+			while(!collision("down")) {
+				currentBlockY++;
+			}
+			timer=-1;
+			spacePassed = false;
 		}
 
 		
