@@ -250,7 +250,7 @@
 				for(j=0;j<4;j++) {
 					var temp = mono[currentBlock-1];
 					if(temp[i+j*4]) {
-						if (currentBlockX==0) {
+						if ((currentBlockX+i)==0) {
 							return true;
 						}
 						if (( map[(currentBlockX+i-1) + ((currentBlockY+j)*10)] )) {
@@ -264,7 +264,7 @@
 				for(j=0;j<4;j++) {
 					var temp = mono[currentBlock-1];
 					if(temp[i+j*4]) {
-						if (currentBlockX==(20-4)) {
+						if ((currentBlockX+i)==(9)) {
 							return true;
 						}
 						if (( map[(currentBlockX+i+1) + ((currentBlockY+j)*10)] )) {
