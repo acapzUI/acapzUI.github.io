@@ -340,6 +340,9 @@
 			timer = timerEnd;
 		}
 
+		if (downPressed && !collision("down")) {
+			currentBlockY++;
+		}
 		if (leftPressed && leftPassed && !collision("left")) {
 			console.log("left move");
 			currentBlockX--;
