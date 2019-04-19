@@ -50,7 +50,7 @@
 	var downPassed = true;
 	var spacePassed = true;
 
-	var timerEnd = 50;
+	var timerEnd = 70;
 	var timer = timerEnd;
 
 	var currentBlock;
@@ -152,11 +152,13 @@
 			leftPassed = true;
 		} else if (e.keyCode == 38) {
 			upPressed = false;
-			left
+			upPassed = true;
 		} else if (e.keyCode == 40) {
 			downPressed = false;
+			downPassed = true;
 		} else if (e.keyCode == 32) {
 			spacePressed = false;
+			spacePassed = true;
 		}
  	}
 	function shuffle(array) {
@@ -175,7 +177,8 @@
 		}
 		return copy;
 	}
-	function draw() { // 드로우 페이즈 
+	// 드로우 페이즈
+	function draw() {  
 
 		// 캔버스 비우기
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -192,8 +195,8 @@
 				var temp = map[i+j*10];
 				if (temp) { 
 					ctx.globalAlpha = 1;
-					ctx.drawImage(blockImage,i*16,j*16);
-					ctx.globalAlpha = 0.5;
+					//ctx.drawImage(blockImage,i*16,j*16);
+					//ctx.globalAlpha = 0.5;
 					ctx.fillStyle = monoColors[temp-1];
 					ctx.fillRect(i*16,j*16,16,16);
 				}
@@ -207,8 +210,8 @@
 				var temp2 = temp[i+j*4];
 				if (temp2) {
 					ctx.globalAlpha = 1;
-					ctx.drawImage(blockImage,currentBlockX*16+i*16,currentBlockY*16+j*16);
-					ctx.globalAlpha = 0.5;
+					//ctx.drawImage(blockImage,currentBlockX*16+i*16,currentBlockY*16+j*16);
+					//ctx.globalAlpha = 0.5;
 					ctx.fillStyle = monoColors[temp2-1];
 					ctx.fillRect(currentBlockX*16+i*16,currentBlockY*16+j*16,16,16);
 
@@ -232,27 +235,88 @@
 					var temp3 = temp2[i+j*4];
 					if (temp3) {
 						ctx.globalAlpha = 1;
-						ctx.drawImage(blockImage,xpos+shift*z+i*16,ypos+j*16);
-						ctx.globalAlpha = 0.5;
+						//ctx.drawImage(blockImage,xpos+shift*z+i*16,ypos+j*16);
+						//ctx.globalAlpha = 0.5;
 						ctx.fillStyle = monoColors[temp3-1];
 						ctx.fillRect(xpos+shift*z+i*16,ypos+j*16,16,16);
 					}
 				}
 			}
 		}
-		
 	}
-
-	function collision() {
+	// 충돌 처리
+	function collision(dir) {
 		var i, j;
-		var ypos = -1;
-		for(i=0;i<4;i++) {
-			for(j=0;j<4;j++) {
-
+		if (dir=="left") {
+			for(i=0;i<4;i++) {
+				for(j=0;j<4;j++) {
+					var temp = mono[currentBlock-1];
+					if(temp[i+j*4]) {
+						if ((currentBlockX+i)==0) {
+							return true;
+						}
+						if (( map[(currentBlockX+i-1) + ((currentBlockY+j)*10)] )) {
+							return true;
+						}
+					}
+				}
+			}	
+		} else if (dir=="right") {
+			for(i=0;i<4;i++) {
+				for(j=0;j<4;j++) {
+					var temp = mono[currentBlock-1];
+					if(temp[i+j*4]) {
+						if ((currentBlockX+i)==(9)) {
+							return true;
+						}
+						if (( map[(currentBlockX+i+1) + ((currentBlockY+j)*10)] )) {
+							return true;
+						}
+					}
+				}
+			}
+		} else if (dir=="down") {
+			for (i=0;i<4;i++) {
+				for (j=0;j<4;j++) {
+					var temp = mono[currentBlock-1];
+					if (temp[i+j*4]) {
+						if((currentBlockY+1)==18) {
+							return true;
+						}
+						if (( map[(currentBlockX+i) + ((currentBlockY+j+1)*10)] )) {
+							return true;
+						}
+					}
+				}
 			}
 		}
 		return false;
 	}
+	function mapInsert() {
+		var i, j;
+		var temp = mono[currentBlock-1];
+		for (i=0;i<4;i++) {
+			for(j=0;j<4;j++) {
+				var temp2 = temp[i+j*4];
+				if (temp2){
+					map[currentBlockX+i+(currentBlockY+j)*10] = currentBlock;
+				}
+			}
+		}
+	}
+	function rotate(num) {
+		var i, j;
+		var ii, jj;
+		var arr = [];
+
+
+		for (i=0;i<4;i++) {
+			for (j=0;j<4;j++) {
+
+			}
+		}
+	}
+
 
 	function init() { // 초기화 페이즈
 		//console.log(blocksStack);
@@ -271,24 +335,42 @@
 		// timer trigger
 		if (timer<0) {
 			var temp;
+			temp = collision("down");
 
-			// test code
-			if (currentBlockY>16) {
-				temp = true;
-			} else {
-				temp = false;
-			}
-
-			//temp = collision();
 			if (!temp) {
 				currentBlockY++;
 			} else {
+
+				mapInsert();
+
 				// 다음 블럭 나오는 action
+				currentBlockX = 3;
 				currentBlockY = -2;
 				currentBlock = blocksStack[0];
 				blocksStack.shift();
 			}
 			timer = timerEnd;
+		}
+
+		if (downPressed && !collision("down")) {
+			currentBlockY++;
+		}
+		if (leftPressed && leftPassed && !collision("left")) {
+			console.log("left move");
+			currentBlockX--;
+			leftPassed = false;
+		} 
+		if (rightPressed && rightPassed && !collision("right")) {
+			console.log("right move");
+			currentBlockX++;
+			rightPassed = false;
+		}
+		if (spacePressed && spacePassed) {
+			while(!collision("down")) {
+				currentBlockY++;
+			}
+			timer=-1;
+			spacePassed = false;
 		}
 
 		
@@ -305,9 +387,6 @@
 
 	init(); 
 	setInterval(step,10);
-
-
-
 
 </script>
 
