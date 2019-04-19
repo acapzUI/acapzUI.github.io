@@ -195,8 +195,8 @@
 				var temp = map[i+j*10];
 				if (temp) { 
 					ctx.globalAlpha = 1;
-					ctx.drawImage(blockImage,i*16,j*16);
-					ctx.globalAlpha = 0.5;
+					//ctx.drawImage(blockImage,i*16,j*16);
+					//ctx.globalAlpha = 0.5;
 					ctx.fillStyle = monoColors[temp-1];
 					ctx.fillRect(i*16,j*16,16,16);
 				}
@@ -210,8 +210,8 @@
 				var temp2 = temp[i+j*4];
 				if (temp2) {
 					ctx.globalAlpha = 1;
-					ctx.drawImage(blockImage,currentBlockX*16+i*16,currentBlockY*16+j*16);
-					ctx.globalAlpha = 0.5;
+					//ctx.drawImage(blockImage,currentBlockX*16+i*16,currentBlockY*16+j*16);
+					//ctx.globalAlpha = 0.5;
 					ctx.fillStyle = monoColors[temp2-1];
 					ctx.fillRect(currentBlockX*16+i*16,currentBlockY*16+j*16,16,16);
 
@@ -235,8 +235,8 @@
 					var temp3 = temp2[i+j*4];
 					if (temp3) {
 						ctx.globalAlpha = 1;
-						ctx.drawImage(blockImage,xpos+shift*z+i*16,ypos+j*16);
-						ctx.globalAlpha = 0.5;
+						//ctx.drawImage(blockImage,xpos+shift*z+i*16,ypos+j*16);
+						//ctx.globalAlpha = 0.5;
 						ctx.fillStyle = monoColors[temp3-1];
 						ctx.fillRect(xpos+shift*z+i*16,ypos+j*16,16,16);
 					}
@@ -387,9 +387,6 @@
 
 	init(); 
 	setInterval(step,10);
-
-
-
 
 </script>
 
