@@ -152,7 +152,7 @@
 			zPressed = true;
 		} else if (e.keyCode == 88 && xPassed) {
 			xPressed = true;
-		} else if (e.keyCode == 67 && cPassed) {
+		} else if (e.KeyCode == 67 && cPassed) {
 			cPressed = true;
 		}
 	}
@@ -351,6 +351,34 @@
 					}
 				}
 			}
+		} else if (dir="collisionRight") {
+			rotateRight();
+			var temp = roatate(currentRotate);
+			for (i=0;i<4;i++) {
+				for (j=0;j<4;j++) {
+					if (temp[i+j*4]) {
+						if (( map[(currentBlockX) + ((currentBlockY+j+1)*10)] )) {
+							return true;
+						}
+					}
+				}
+			}
+			rotateLeft();
+			return false;
+		} else if (dir="collisionLeft") {
+			rotateLeft();
+			var temp = roatate(currentRotate);
+			for (i=0;i<4;i++) {
+				for (j=0;j<4;j++) {
+					if (temp[i+j*4]) {
+						if (( map[(currentBlockX) + ((currentBlockY+j+1)*10)] )) {
+							return true;
+						}
+					}
+				}
+			}
+			rotateRight();
+			return false;
 		}
 		return false;
 	}
@@ -366,7 +394,22 @@
 			}
 		}
 	}
-	
+	function rotateRight() {
+		if (currentRotate==3) {
+			currentRotate=0;
+		} else {
+			currentRotate++;
+		}
+	}
+	function rotateLeft() {
+		if (currentRotate==3) {
+			currentRotate=0;
+		} else {
+			currentRotate++;
+		}
+	}
+
+
 
 	function init() { // 초기화 페이즈
 		//console.log(blocksStack);
@@ -424,22 +467,14 @@
 			timer=-1;
 			spacePassed = false;
 		}
-		if (zPressed && zPassed) {
+		if (zPressed && zPassed && !collision("collisionLeft")) {
 			console.log("rotate left");
-			if (currentRotate==0) {
-				currentRotate=3;
-			} else {
-				currentRotate--;
-			}
+			//rotateLeft();
 			zPassed = false;
 		}
-		if (xPressed && xPassed) {
+		if (xPressed && xPassed&& ! collision("collisionRight")) {
 			console.log("rotate right");
-			if (currentRotate==3) {
-				currentRotate=0;
-			} else {
-				currentRotate++;
-			}
+			//rotateRight();
 			xPassed = false;
 		}
 		if (cPressed && cPassed) {
