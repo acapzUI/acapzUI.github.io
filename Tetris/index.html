@@ -184,20 +184,21 @@
 			cPassed = true;
 		}
  	}
- 	function rotateRight() {
-		if (currentRotate==3) {
-			currentRotate=0;
+ 	function rotateRight(num) {
+		if (num==3) {
+			return 0;
 		} else {
-			currentRotate++;
+			return num+1;
 		}
 	}
-	function rotateLeft() {
-		if (currentRotate==3) {
-			currentRotate=0;
+	function rotateLeft(num) {
+		if (num==0) {
+			return 3;
 		} else {
-			currentRotate++;
+			return num-1;		
 		}
 	}
+
  	function rotate(num) {
 
 		/*
@@ -366,13 +367,18 @@
 				}
 			}
 		} else if (dir="collisionRight") {
-			rotateRight();
-			var temp = rotate(currentRotate);
+			var rotate_temp = rotateRight(currentRotate);
+			var temp = rotate(rotate_temp);
 			for (i=0;i<4;i++) {
 				for (j=0;j<4;j++) {
 					if (temp[i+j*4]) {
+						if (currentBlockX+i+1==10) {
+							return true;
+						}
+						if (currentBlockX+i==-1) {
+							return true;
+						}
 						if (( map[(currentBlockX) + ((currentBlockY+j+1)*10)] )) {
-							rotateLeft();
 							return true;
 						}
 					}
@@ -380,13 +386,18 @@
 			}
 			return false;
 		} else if (dir="collisionLeft") {
-			rotateLeft();
-			var temp = roatate(currentRotate);
+			var rotate_temp = rotateLeft(currentRotate);
+			var temp = roatate(rotate_temp);
 			for (i=0;i<4;i++) {
 				for (j=0;j<4;j++) {
 					if (temp[i+j*4]) {
+						if (currentBlockX+i+1==10) {
+							return true;
+						}
+						if (currentBlockX+i==-1) {
+							return true;
+						}
 						if (( map[(currentBlockX) + ((currentBlockY+j+1)*10)] )) {
-							rotateRight();
 							return true;
 						}
 					}
@@ -468,12 +479,12 @@
 		}
 		if (zPressed && zPassed && !collision("collisionLeft")) {
 			console.log("rotate left");
-			//rotateLeft();
+			currentRotate = rotateLeft(currentRotate);
 			zPassed = false;
 		}
 		if (xPressed && xPassed&& !collision("collisionRight")) {
 			console.log("rotate right");
-			//rotateRight();
+			currentRotate = rotateRight(currentRotate);
 			xPassed = false;
 		}
 		if (cPressed && cPassed) {
