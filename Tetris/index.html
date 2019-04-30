@@ -127,6 +127,7 @@
 	var blocksStack = [];
 	var blocksDummy = [];
 	var hold = 0;
+	var holded = false;
 
 	var currentBlockX = 3;
 	var currentBlockY = -1;
@@ -335,6 +336,28 @@
 				}
 			}
 		}
+
+		// hold
+		var xpos = 200;
+		var ypos = 30;
+		var temp = hold; 
+		if (hold!=0) {
+			for(i=0;i<4;i++) {
+				for(j=0;j<4;j++) {
+					var temp2 = mono[temp-1];
+					//alert(temp2)
+					var temp3 = temp2[i+j*4];
+					if (temp3) {
+						ctx.globalAlpha = 1;
+						//ctx.drawImage(blockImage,xpos+shift*z+i*16,ypos+j*16);
+						//ctx.globalAlpha = 0.5;
+						ctx.fillStyle = monoColors[temp3-1];
+						ctx.fillRect(xpos+i*16,ypos+j*16,16,16);
+					}
+				}
+			}
+		}
+
 	}
 	// 충돌 처리
 	function collision(dir) {
@@ -459,11 +482,11 @@
 
 				// 다음 블럭 나오는 action
 				currentRotate = 0;
-
 				currentBlockX = 3;
 				currentBlockY = -1;
 				currentBlock = blocksStack[0];
 				blocksStack.shift();
+				holded = false;
 			}
 			timer = timerEnd;
 		}
@@ -492,21 +515,35 @@
 		if (zPressed && zPassed && !collision("collisionLeft")) {
 			console.log("rotate left");
 			currentRotate = rotateLeft(currentRotate);
-			if (!collision("left")) {
+			/*if (!collision("left")) {
 				currentBlockX--;
-			}
+			}*/
 			zPassed = false;
 		}
-		if (xPressed && xPassed&& !collision("collisionRight")) {
+		if (xPressed && xPassed && !collision("collisionRight")) {
 			console.log("rotate right");
 			currentRotate = rotateRight(currentRotate);
-			if (!collision("right")) {
+			/*if (!collision("right")) {
 				currentBlockX++;
-			}
+			}*/
 			xPassed = false;
 		}
-		if (cPressed && cPassed) {
+		if (cPressed && cPassed && !holded) {
 			console.log("c");
+
+			currentRotate = 0;
+			currentBlockX = 3;
+			currentBlockY = -1;
+			if (hold == 0) {
+				hold = currentBlock;
+				currentBlock = blocksStack[0];
+			} else {
+				var temp = hold;
+				hold = currentBlock;
+				currentBlock = temp;
+			}
+			holded = true;
+			blocksStack.shift();
 			cPassed = false;
 		}
 		
