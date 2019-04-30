@@ -455,6 +455,30 @@
 			}
 		}
 	}
+ 	function mapClear() {
+ 		console.log("Function mapClear");
+ 		var i;
+ 		var j;
+ 		var k;
+ 		var flag = false;
+ 		for (i=0;i<20;i++) {
+ 			for (j=0;j<10;j++) {
+ 				console.log(j);
+ 				if (map[i*10+j]==0) {
+ 					flag = false;
+ 					break;
+ 				}
+ 				flag = true;
+ 			}
+ 			if (flag) {
+ 				console.log("map cleared");
+ 				var temp = map.slice(0,i*10);
+ 				var temp2 = map.slice((i+1)*10,200);
+ 				temp = [0,0,0,0,0,0,0,0,0,0].concat(temp);
+ 				map = temp.concat(temp2);
+ 			}
+ 		}
+ 	}
 
 
 	function init() { // 초기화 페이즈
@@ -487,6 +511,8 @@
 				currentBlock = blocksStack[0];
 				blocksStack.shift();
 				holded = false;
+
+				mapClear();
 			}
 			timer = timerEnd;
 		}
