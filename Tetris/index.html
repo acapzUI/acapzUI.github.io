@@ -435,7 +435,6 @@
 
 
 	function init() { // 초기화 페이즈
-		//console.log("sibla");
 		blocksStack = blocks.slice();
 		//console.log(blocksStack);
 
@@ -493,11 +492,17 @@
 		if (zPressed && zPassed && !collision("collisionLeft")) {
 			console.log("rotate left");
 			currentRotate = rotateLeft(currentRotate);
+			if (!collision("left")) {
+				currentBlockX--;
+			}
 			zPassed = false;
 		}
 		if (xPressed && xPassed&& !collision("collisionRight")) {
 			console.log("rotate right");
 			currentRotate = rotateRight(currentRotate);
+			if (!collision("right")) {
+				currentBlockX++;
+			}
 			xPassed = false;
 		}
 		if (cPressed && cPassed) {
