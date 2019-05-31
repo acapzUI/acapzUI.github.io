@@ -34,8 +34,6 @@
 	document.addEventListener("keydown", keyDownHandler, false);
 	document.addEventListener("keyup", keyUpHandler, false);
 
-
-
 	//////////////////////////////// variables
 
 	var rightPressed = false;
@@ -56,7 +54,7 @@
 	var xPassed = true;
 	var cPassed = true;
 
-	var timerEnd = 70;
+	var timerEnd = 80;
 	var timer = timerEnd;
 
 	var currentBlock;
@@ -252,6 +250,7 @@
 			}	
 			if (z==3) { returnArray.push(0, 0, 0, 0); }
 		}
+
 		return returnArray;
 	}
 	function shuffle(array) {
@@ -360,17 +359,17 @@
 
 	}
 	// 충돌 처리
-	function collision(dir) {
+	function collision(dir, x, y) {
 		var i, j;
 		var temp = rotate(currentRotate);
 		if (dir=="left") {
 			for(i=0;i<4;i++) {
 				for(j=0;j<4;j++) {
 					if(temp[i+j*4]) {
-						if ((currentBlockX+i)==0) {
+						if ((x+i)==0) {
 							return true;
 						}
-						if (( map[(currentBlockX+i-1) + ((currentBlockY+j)*10)] )) {
+						if (( map[(x+i-1) + ((y+j)*10)] )) {
 							return true;
 						}
 					}
@@ -380,10 +379,10 @@
 			for(i=0;i<4;i++) {
 				for(j=0;j<4;j++) {
 					if(temp[i+j*4]) {
-						if ((currentBlockX+i)==9) {
+						if ((x+i)==9) {
 							return true;
 						}
-						if (( map[(currentBlockX+i+1) + ((currentBlockY+j)*10)] )) {
+						if (( map[(x+i+1) + ((y+j)*10)] )) {
 							return true;
 						}
 					}
@@ -393,53 +392,51 @@
 			for (i=0;i<4;i++) {
 				for (j=0;j<4;j++) {
 					if (temp[i+j*4]) {
-						if((currentBlockY+j)==19) {
+						if((y+j)==19) {
 							return true;
 						}
-						if (( map[(currentBlockX+i) + ((currentBlockY+j+1)*10)] )) {
+						if (( map[(x+i) + ((y+j+1)*10)] )) {
 							return true;
 						}
 					}
 				}
 			}
-		} else if (dir="collisionRight") {
+		} else if (dir=="collisionRight") {
 			var rotate_temp = rotateRight(currentRotate);
 			var temp = rotate(rotate_temp);
 			for (i=0;i<4;i++) {
 				for (j=0;j<4;j++) {
 					if (temp[i+j*4]) {
-						if (currentBlockX+i+1==10) {
+						if (x+i+1==11) {
 							return true;
 						}
-						if (currentBlockX+i==-1) {
+						if (x+i==-1) {
 							return true;
 						}
-						if (( map[(currentBlockX) + ((currentBlockY+j+1)*10)] )) {
+						if (( map[(x+i) + ((y+j)*10)] )) {
 							return true;
 						}
 					}
 				}
 			}
-			return false;
-		} else if (dir="collisionLeft") {
+		} else if (dir=="collisionLeft") {
 			var rotate_temp = rotateLeft(currentRotate);
-			var temp = roatate(rotate_temp);
+			var temp = rotate(rotate_temp);
 			for (i=0;i<4;i++) {
 				for (j=0;j<4;j++) {
 					if (temp[i+j*4]) {
-						if (currentBlockX+i+1==10) {
+						if (x+i+1==11) {
 							return true;
 						}
-						if (currentBlockX+i==-1) {
+						if (x+i==-1) {
 							return true;
 						}
-						if (( map[(currentBlockX) + ((currentBlockY+j+1)*10)] )) {
+						if (( map[(x+i) + ((y+j)*10)] )) {
 							return true;
 						}
 					}
 				}
 			}
-			return false;
 		}
 		return false;
 	}
@@ -463,7 +460,7 @@
  		var flag = false;
  		for (i=0;i<20;i++) {
  			for (j=0;j<10;j++) {
- 				console.log(j);
+ 				//console.log(j);
  				if (map[i*10+j]==0) {
  					flag = false;
  					break;
@@ -517,41 +514,43 @@
 			timer = timerEnd;
 		}
 
-		if (downPressed && !collision("down")) {
+		if (downPressed && !collision("down", currentBlockX, currentBlockY)) {
 			currentBlockY++;
 		}
-		if (leftPressed && leftPassed && !collision("left")) {
+		if (leftPressed && leftPassed && !collision("left", currentBlockX, currentBlockY)) {
 			console.log("left move");
 			currentBlockX--;
 			leftPassed = false;
 		} 
-		if (rightPressed && rightPassed && !collision("right")) {
+		if (rightPressed && rightPassed && !collision("right", currentBlockX, currentBlockY)) {
 			console.log("right move");
 			currentBlockX++;
 			rightPassed = false;
 		}
 		if (spacePressed && spacePassed) {
 			console.log("space");
-			while(!collision("down")) {
+			while(!collision("down", currentBlockX, currentBlockY)) {
 				currentBlockY++;
 			}
 			timer=-1;
 			spacePassed = false;
 		}
-		if (zPressed && zPassed && !collision("collisionLeft")) {
-			console.log("rotate left");
-			currentRotate = rotateLeft(currentRotate);
-			/*if (!collision("left")) {
-				currentBlockX--;
-			}*/
+		if (zPressed && zPassed) {
+
+			if (!collision("collisionLeft", currentBlockX, currentBlockY)) { 
+				// 일반적인 좌측 회전
+				console.log("rotate left");
+				currentRotate = rotateLeft(currentRotate);
+			}
 			zPassed = false;
 		}
-		if (xPressed && xPassed && !collision("collisionRight")) {
-			console.log("rotate right");
-			currentRotate = rotateRight(currentRotate);
-			/*if (!collision("right")) {
-				currentBlockX++;
-			}*/
+		if (xPressed && xPassed) {
+
+			if (!collision("collisionRight", currentBlockX, currentBlockY)) {
+				// 일반적인 우측 회전
+				console.log("rotate right");
+				currentRotate = rotateRight(currentRotate);	
+			}
 			xPassed = false;
 		}
 		if (cPressed && cPassed && !holded) {
