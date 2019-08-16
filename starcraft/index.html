@@ -23,17 +23,49 @@
 	</style>
 </head>
 <body>
-	<canvas id="myCanvas" width="480" height="720">
+	<canvas id="myCanvas" width="480" height="720" onclick="clickEvent(event);"></canvas>
 
 	<script type="text/javascript">
 		
 		var canvas = document.getElementById("myCanvas");
 		var ctx = canvas.getContext("2d");
 
-		document.add
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+		document.addEventListener("mouseUp")
 
+		// vars
+
+		// fucs
+
+		function keyDownHandler(e) {
+
+		}
+		function keyUpHandler(e) {
+
+		}
+
+		function draw() {
+			
+		}
+
+		// main
+
+		function init() {
+
+		}
+		function calc() {
+
+		}
+		function step() {
+			calc();
+			draw();
+		}
+
+		init();
+		setInterval(step, 10);
 
 	</script>
 
-
 </body>
+</html>
