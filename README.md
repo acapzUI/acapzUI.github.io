@@ -1,3 +1,2 @@
 # devpz.github.io
-
-# DO SOMETHING!
+DO SOMETHING!
